@@ -8,7 +8,7 @@ Group:		Libraries/Python
 Source0:	http://pkgs.fedoraproject.org/repo/pkgs/pykickstart/%{module}-%{version}.tar.gz/b9c78c95c6233b69f696ce4b8ea9407e/%{module}-%{version}.tar.gz
 # Source0-md5:	b9c78c95c6233b69f696ce4b8ea9407e
 URL:		http://fedoraproject.org/wiki/pykickstart
-BuildRequires:	gettext
+BuildRequires:	gettext-devel
 BuildRequires:	python-distribute
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.219
