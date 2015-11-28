@@ -2,7 +2,7 @@
 Summary:	A python library for manipulating kickstart files
 Name:		python-%{module}
 Version:	1.99.30
-Release:	1
+Release:	2
 License:	GPL v2
 Group:		Libraries/Python
 Source0:	http://pkgs.fedoraproject.org/repo/pkgs/pykickstart/%{module}-%{version}.tar.gz/b9c78c95c6233b69f696ce4b8ea9407e/%{module}-%{version}.tar.gz
