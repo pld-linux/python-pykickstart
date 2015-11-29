@@ -11,7 +11,7 @@ URL:		http://fedoraproject.org/wiki/pykickstart
 BuildRequires:	gettext-tools
 BuildRequires:	python-distribute
 BuildRequires:	rpm-pythonprov
-BuildRequires:	rpmbuild(macros) >= 1.219
+BuildRequires:	rpmbuild(macros) >= 1.710
 #BuildRequires:	transifex-client
 Requires:	python-urlgrabber
 BuildArch:	noarch
