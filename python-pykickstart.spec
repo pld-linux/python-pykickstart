@@ -1,61 +1,126 @@
+#
+# Conditional build:
+%bcond_without	python2	# CPython 2.x module
+%bcond_without	python3	# CPython 3.x module
+
 %define 	module	pykickstart
-Summary:	A python library for manipulating kickstart files
+Summary:	A Python 2 library for manipulating kickstart files
+Summary(pl.UTF-8):	Biblioteka Pythona 2 do operowania na plikach kickstart
 Name:		python-%{module}
-Version:	1.99.30
-Release:	2
+Version:	3.20
+Release:	1
 License:	GPL v2
 Group:		Libraries/Python
-Source0:	http://pkgs.fedoraproject.org/repo/pkgs/pykickstart/%{module}-%{version}.tar.gz/b9c78c95c6233b69f696ce4b8ea9407e/%{module}-%{version}.tar.gz
-# Source0-md5:	b9c78c95c6233b69f696ce4b8ea9407e
-URL:		http://fedoraproject.org/wiki/pykickstart
+#Source0Download: https://github.com/dcantrell/pykickstart/releases
+Source0:	https://github.com/dcantrell/pykickstart/releases/download/r%{version}/%{module}-%{version}.tar.gz
+# Source0-md5:	d5078ff375a895e3a2a85d78d7b77dc5
+URL:		https://fedoraproject.org/wiki/pykickstart
 BuildRequires:	gettext-tools
-BuildRequires:	python-distribute
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.710
-#BuildRequires:	transifex-client
-Requires:	python-urlgrabber
+%if %{with python2}
+BuildRequires:	python-devel >= 1:2.7
+%endif
+%if %{with python3}
+BuildRequires:	python3-devel >= 1:3.2
+%endif
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
+%define		_duplicate_files_terminate_build	0
+
 %description
-The pykickstart package is a Python library for manipulating kickstart
-files.
+Pykickstart is a Python 2 and Python 3 library consisting of a data
+representation of kickstart files, a parser to read files into that
+representation, and a writer to generate kickstart files.
+
+%description -l pl.UTF-8
+Pykickstart to biblioteka Pythona 2 i Pythona 3, składająca się z
+reprezentacji danych plików kickstart, parsera do odczytu plików do
+tej reprezentacji oraz generatora plików kickstart.
+
+%package -n python3-%{module}
+Summary:	A Python 3 library for manipulating kickstart files
+Summary(pl.UTF-8):	Biblioteka Pythona 3 do operowania na plikach kickstart
+Group:		Libraries/Python
+
+%description -n python3-%{module}
+Pykickstart is a Python 2 and Python 3 library consisting of a data
+representation of kickstart files, a parser to read files into that
+representation, and a writer to generate kickstart files.
+
+%description -n python3-%{module} -l pl.UTF-8
+Pykickstart to biblioteka Pythona 2 i Pythona 3, składająca się z
+reprezentacji danych plików kickstart, parsera do odczytu plików do
+tej reprezentacji oraz generatora plików kickstart.
 
 %prep
 %setup -q -n %{module}-%{version}
 
 %build
+%if %{with python2}
 %py_build
+%endif
+
+%if %{with python3}
+%py3_build
+%endif
+
 %{__make} -C po
 
 %install
 rm -rf $RPM_BUILD_ROOT
+
+%if %{with python2}
 %py_install
 
-%{__make} -C po install \
-	DESTDIR=$RPM_BUILD_ROOT
-
 %py_postclean
+%endif
+
+%if %{with python3}
+%py3_install
+%endif
+
+%{__make} -C po install \
+	DESTDIR=$RPM_BUILD_ROOT \
+	INSTALL_NLS_DIR=$RPM_BUILD_ROOT%{_localedir}
+
 %find_lang %{module}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%if %{with python2}
 %files -f %{module}.lang
 %defattr(644,root,root,755)
-%doc README ChangeLog docs/programmers-guide docs/kickstart-docs.txt
-%attr(755,root,root) %{_bindir}/ksvalidator
+%doc README.rst docs/{kickstart-docs.txt,programmers-guide}
+%if 0
+# TODO: package as *-2 or in -tools package?
 %attr(755,root,root) %{_bindir}/ksflatten
+%attr(755,root,root) %{_bindir}/ksshell
+%attr(755,root,root) %{_bindir}/ksvalidator
 %attr(755,root,root) %{_bindir}/ksverdiff
-%dir %{py_sitescriptdir}/pykickstart
-%dir %{py_sitescriptdir}/pykickstart/commands
-%dir %{py_sitescriptdir}/pykickstart/handlers
-%{py_sitescriptdir}/pykickstart/*.py[co]
-%{py_sitescriptdir}/pykickstart/commands/*.py[co]
-%{py_sitescriptdir}/pykickstart/handlers/__init__.py[co]
-%{py_sitescriptdir}/pykickstart/handlers/control.py[co]
-%{py_sitescriptdir}/pykickstart/handlers/f1[0-9].py[co]
-%{py_sitescriptdir}/pykickstart/handlers/f[7-9].py[co]
-%{py_sitescriptdir}/pykickstart/handlers/fc[3-6].py[co]
-%{py_sitescriptdir}/pykickstart/handlers/rhel[3-7].py[co]
+%{_mandir}/man1/ksflatten.1*
+%{_mandir}/man1/ksshell.1*
+%{_mandir}/man1/ksvalidator.1*
+%{_mandir}/man1/ksverdiff.1*
+%endif
+%{py_sitescriptdir}/pykickstart
 %{py_sitescriptdir}/pykickstart-%{version}-*.egg-info
+%endif
+
+%if %{with python3}
+%files -n python3-%{module} -f %{module}.lang
+%defattr(644,root,root,755)
+%doc README.rst docs/{kickstart-docs.txt,programmers-guide}
+%attr(755,root,root) %{_bindir}/ksflatten
+%attr(755,root,root) %{_bindir}/ksshell
+%attr(755,root,root) %{_bindir}/ksvalidator
+%attr(755,root,root) %{_bindir}/ksverdiff
+%{_mandir}/man1/ksflatten.1*
+%{_mandir}/man1/ksshell.1*
+%{_mandir}/man1/ksvalidator.1*
+%{_mandir}/man1/ksverdiff.1*
+%{py3_sitescriptdir}/pykickstart
+%{py3_sitescriptdir}/pykickstart-%{version}-*.egg-info
+%endif
