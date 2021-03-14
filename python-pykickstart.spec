@@ -3,17 +3,16 @@
 %bcond_without	python2	# CPython 2.x module
 %bcond_without	python3	# CPython 3.x module
 
-%define 	module	pykickstart
+%define		module	pykickstart
 Summary:	A Python 2 library for manipulating kickstart files
 Summary(pl.UTF-8):	Biblioteka Pythona 2 do operowania na plikach kickstart
 Name:		python-%{module}
-Version:	3.20
-Release:	4
+Version:	3.32
+Release:	1
 License:	GPL v2
 Group:		Libraries/Python
-#Source0Download: https://github.com/dcantrell/pykickstart/releases
-Source0:	https://github.com/dcantrell/pykickstart/releases/download/r%{version}/%{module}-%{version}.tar.gz
-# Source0-md5:	d5078ff375a895e3a2a85d78d7b77dc5
+Source0:	https://github.com/pykickstart/pykickstart/archive/r%{version}/%{module}-%{version}.tar.gz
+# Source0-md5:	3dc66875645787f3b390d2cb55977c8c
 URL:		https://fedoraproject.org/wiki/pykickstart
 BuildRequires:	gettext-tools
 BuildRequires:	rpm-pythonprov
@@ -55,7 +54,7 @@ reprezentacji danych plików kickstart, parsera do odczytu plików do
 tej reprezentacji oraz generatora plików kickstart.
 
 %prep
-%setup -q -n %{module}-%{version}
+%setup -q -n %{module}-r%{version}
 
 %build
 %if %{with python2}
@@ -85,15 +84,13 @@ rm -rf $RPM_BUILD_ROOT
 	DESTDIR=$RPM_BUILD_ROOT \
 	INSTALL_NLS_DIR=$RPM_BUILD_ROOT%{_localedir}
 
-%find_lang %{module}
-
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %if %{with python2}
-%files -f %{module}.lang
+%files
 %defattr(644,root,root,755)
-%doc README.rst docs/{kickstart-docs.txt,programmers-guide}
+%doc README.rst docs/{kickstart-docs.rst,programmers-guide}
 %if 0
 # TODO: package as *-2 or in -tools package?
 %attr(755,root,root) %{_bindir}/ksflatten
@@ -110,9 +107,9 @@ rm -rf $RPM_BUILD_ROOT
 %endif
 
 %if %{with python3}
-%files -n python3-%{module} -f %{module}.lang
+%files -n python3-%{module}
 %defattr(644,root,root,755)
-%doc README.rst docs/{kickstart-docs.txt,programmers-guide}
+%doc README.rst docs/{kickstart-docs.rst,programmers-guide}
 %attr(755,root,root) %{_bindir}/ksflatten
 %attr(755,root,root) %{_bindir}/ksshell
 %attr(755,root,root) %{_bindir}/ksvalidator
