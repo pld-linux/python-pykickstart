@@ -8,7 +8,7 @@ Summary:	A Python 2 library for manipulating kickstart files
 Summary(pl.UTF-8):	Biblioteka Pythona 2 do operowania na plikach kickstart
 Name:		python-%{module}
 Version:	3.32
-Release:	3
+Release:	4
 License:	GPL v2
 Group:		Libraries/Python
 Source0:	https://github.com/pykickstart/pykickstart/archive/r%{version}/%{module}-%{version}.tar.gz
